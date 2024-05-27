@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1D PacMan</title>
+</head>
+<body>
+<script>
+    let score = 0;
+    let level = 1;
+
+    function createGame(n) {
+        let game = new Array(n).fill('.');
+        game[Math.floor(Math.random() * n)] = 'C';
+        game[Math.floor(Math.random() * n)] = '^';
+        game[Math.floor(Math.random() * n)] = '@';
+        return game;
+    }
+
+    function moveLeft(game) {
+        let index = game.indexOf('C');
+        if (index > 0) {
+            game[index] = '.';
+            if (game[index - 1] === '.') {
+                score += 1;
+            }
+            game[index - 1] = 'C';
+        }
+        return game;
+    }
+
+    function moveRight(game) {
+        let index = game.indexOf('C');
+        if (index < game.length - 1) {
+            game[index] = '.';
+            if (game[index + 1] === '.') {
+                score += 1;
+            }
+            game[index + 1] = 'C';
+        }
+        return game;
+    }
+
+    function checkLevelComplete(game) {
+        if (!game.includes('.')) {
+            level += 1;
+            game = createGame(game.length);
+        }
+        return game;
+    }
+
+    function moveGhost(game) {
+        let index = game.indexOf('^');
+        let direction = Math.random() < 0.5 ? -1 : 1;
+        let newIndex = index + direction;
+
+        if (newIndex >= 0 && newIndex < game.length) {
+            if (game[newIndex] === 'C') {
+                console.log('Game Over');
+            } else {
+                game[index] = '.';
+                game[newIndex] = '^';
+            }
+        }
+        return game;
+    }
+
+    let game = createGame(10);
+    console.log(game);
+    console.log(moveLeft(game));
+    console.log(moveRight(game));
+    game = checkLevelComplete(game);
+    console.log('Score:', score, 'Level:', level);
+
+    setInterval(() => {
+        game = moveGhost(game);
+        console.log(game);
+    }, 2000);
+</script>
+</body>
+</html>
